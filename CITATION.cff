@@ -1,8 +1,15 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
+title: Noah's thesis python files
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
 authors:
-  - family-names: van de Weerd
-    given-names: Noah
-title: "Noah's thesis Python files"
-version: 1.0.0
-date-released: 2024-01-10
+  - given-names: Noah
+    family-names: van de Weerd
+    name-particle: Noah
+repository-code: 'https://github.com/not4equalz/MatrixReconstruct'
+license: AFL-3.0
