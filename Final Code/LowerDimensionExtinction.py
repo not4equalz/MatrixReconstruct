@@ -6,7 +6,6 @@ Created on Tue Jan  2 15:26:33 2024
 """
 
 import numpy as np
-import AllFunctions as AF
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 #seed
@@ -15,11 +14,11 @@ np.random.seed(1)
 #Extinction or not? True for Extinction, False for no Extinction
 Extinction = True
 
-
-
 #The following function adds the ones back to the vector of B.
 #After this is done you can reshape the new vector into a S by S matrix.
+
 def addones(w, J):
+    #This function is used as 
     w2=w
     for i in J:
         w2=np.insert(w2, i, 1)
@@ -30,7 +29,38 @@ def norm(A):
 def vec(M):
     V=np.matrix.flatten(M.T)
     return V
+def RandomRMatGen(S, m, sig2=0.2, mu=0):
+    #S is number of species, m is number of fixed points you want to get
+    A = np.random.normal(mu, sig2, (S, m))
+    return A
+def RandMatGen(n, C, diag=0, mu=0, sig2=1, sym=False):
+    """
+    Parameters
+    ----------
+    n : Integer
+        Dimension of generated matrix
+    C : Probability
+        Probability that element is sampled from normal distribution
+    diag : float, optional
+        Each diagonal element will equal to this number. The default is 0.
+    mu : float, optional
+        mean of normal distribution. The default is 0.
+    sig2 : float>0, optional
+        variance of normal distribution. The default is 1.
 
+    This function returns a random matrix of size nxn
+
+    """
+    
+    A = np.random.normal(mu, np.sqrt(sig2), (n,n))
+    CMat = np.reshape(np.random.binomial(1, C, size=n**2), (n,n))
+    A = np.multiply(CMat, A)
+    for i in range(n):
+        A[i, i] = diag
+        if sym==True:
+            for j in np.arange(i,n):
+                A[j,i]=A[i,j]
+    return A
 #number of oringinal species in system
 S=20
 
@@ -51,13 +81,13 @@ errors=[]
 
 #Random matrix generation, small sigma to ensure no extinction
 if Extinction == True:
-    B=AF.RandMatGen(S, 1, diag=1, mu=0, sig2=1/(S**(1)))
+    B=RandMatGen(S, 1, diag=1, mu=0, sig2=1/(S**(1)))
 else:
-    B=AF.RandMatGen(S, 1, diag=1, mu=0, sig2=1/(S**(1.5)))      
+    B=RandMatGen(S, 1, diag=1, mu=0, sig2=1/(S**(1.5)))      
 
 
 #Parameters
-R=np.abs(AF.RandomRMatGen(S, m, sig2=.02, mu=S))
+R=np.abs(RandomRMatGen(S, m, sig2=.02, mu=S))
 
 #initialize matrix to be filled with fixed points
 M=np.zeros((S,m))
@@ -92,7 +122,7 @@ ZeroRows = [i for i in range(S) if sum(M[i, :]) <= 1e-2]
 #generate random noise and add to measurements
 
 Noise=np.random.normal(0, 0.001, (S,m))
-M+=Noise
+#M+=Noise
 
 #remove columns rows and vector elements 
 NewB = np.delete(B, ZeroRows, axis=0)
@@ -158,6 +188,7 @@ plt.ylabel('Error value ' + r'$\|B-B_m^*\|_F^2$')
 for i in range(len(alphas)):
     plt.plot(n, ridgeerrors[i,:], label='Ridge ' + r'$\alpha =$' + str(alphas[i]))
 plt.ylim(0, 10)
+plt.vlines(x=[RealDim-1], ymin=0, ymax=10, color='grey', ls=':', lw=2, label=r'$m = S_{out} -1$')
 plt.legend()
 
 
@@ -166,4 +197,6 @@ plt.figure(dpi=300)
 plt.plot(n, conds)
 plt.xlabel('number of fixed points ' + r'$m$')
 plt.ylabel('Condition number ' + r'$\kappa (X)$')
-#plt.yscale('log')
+plt.vlines(x=[RealDim-1], ymin=0, ymax=max(conds), color='grey', ls=':', lw=2, label=r'$m = S_{out} -1$')
+plt.legend()
+plt.yscale('log')
