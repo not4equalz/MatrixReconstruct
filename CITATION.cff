@@ -2,7 +2,7 @@
 # Visit https://bit.ly/cffinit to generate yours today!
 
 cff-version: 1.2.0
-title: Noah's thesis python files
+title: BThesis python files
 message: >-
   If you use this software, please cite it using the
   metadata from this file.
@@ -10,6 +10,5 @@ type: software
 authors:
   - given-names: Noah
     family-names: van de Weerd
-    name-particle: Noah
 repository-code: 'https://github.com/not4equalz/MatrixReconstruct'
 license: AFL-3.0
