@@ -1,4 +1,4 @@
-# MatrixReconstruct
+# LV Interaction Matrix Reconstruct
 Code used in my bachelor thesis project.
 
 Contains a file where all kinds of different useful functions are stored called AllFunctions.py (not necessary to generate plots)
